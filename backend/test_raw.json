@@ -1,0 +1,87 @@
+{
+    "events": [
+        {
+            "timestamp": "10:29:40",
+            "event_type": "FILE_EVENT",
+            "user": "alice",
+            "process": "chrome.exe",
+            "action": "read",
+            "file": "report.docx",
+            "count": 2
+        },
+        {
+            "timestamp": "10:31:02",
+            "event_type": "USER_ACTION",
+            "user": "alice",
+            "process": "chrome.exe",
+            "action": "download",
+            "file": "update.zip"
+        },
+        {
+            "timestamp": "10:31:08",
+            "event_type": "FILE_EVENT",
+            "user": "alice",
+            "process": "explorer.exe",
+            "action": "extract",
+            "file": "update.zip"
+        },
+        {
+            "timestamp": "10:31:11",
+            "event_type": "FILE_EVENT",
+            "user": "alice",
+            "process": "explorer.exe",
+            "action": "create",
+            "file": "update.exe"
+        },
+        {
+            "timestamp": "10:31:13",
+            "event_type": "PROCESS_EVENT",
+            "user": "alice",
+            "process": "update.exe",
+            "action": "exec",
+            "file": "update.exe"
+        },
+        {
+            "timestamp": "10:31:15",
+            "event_type": "PROCESS_EVENT",
+            "user": "alice",
+            "process": "powershell.exe",
+            "action": "spawn",
+            "parent": "update.exe"
+        },
+        {
+            "timestamp": "10:31:20",
+            "event_type": "NETWORK_EVENT",
+            "user": "alice",
+            "process": "powershell.exe",
+            "action": "connect",
+            "source": "10.0.0.23",
+            "destination": "185.XX.XX.10"
+        },
+        {
+            "timestamp": "10:31:25",
+            "event_type": "FILE_EVENT",
+            "user": "alice",
+            "process": "powershell.exe",
+            "action": "read",
+            "count": 42
+        },
+        {
+            "timestamp": "10:31:29",
+            "event_type": "FILE_EVENT",
+            "user": "alice",
+            "process": "powershell.exe",
+            "action": "write",
+            "count": 18
+        },
+        {
+            "timestamp": "10:35:00",
+            "event_type": "NETWORK_EVENT",
+            "user": "alice",
+            "process": "outlook.exe",
+            "action": "connect",
+            "source": "10.0.0.23",
+            "destination": "52.96.12.3"
+        }
+    ]
+}

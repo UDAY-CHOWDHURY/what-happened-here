@@ -1,0 +1,401 @@
+{
+ "detected": true,
+ "total_events": 10,
+ "title": "Suspicious Execution Chain",
+ "severity": "CRITICAL",
+ "chain": [
+  {
+   "id": "E2",
+   "timestamp": "10:31:02",
+   "event_type": "USER_ACTION",
+   "user": "alice",
+   "process": "chrome.exe",
+   "parent": null,
+   "source": null,
+   "destination": null,
+   "file": "update.zip",
+   "action": "download",
+   "count": 1,
+   "raw_event": {
+    "timestamp": "10:31:02",
+    "event_type": "USER_ACTION",
+    "user": "alice",
+    "process": "chrome.exe",
+    "action": "download",
+    "file": "update.zip"
+   },
+   "tag": "DOWNLOAD"
+  },
+  {
+   "id": "E3",
+   "timestamp": "10:31:08",
+   "event_type": "FILE_EVENT",
+   "user": "alice",
+   "process": "explorer.exe",
+   "parent": null,
+   "source": null,
+   "destination": null,
+   "file": "update.zip",
+   "action": "extract",
+   "count": 1,
+   "raw_event": {
+    "timestamp": "10:31:08",
+    "event_type": "FILE_EVENT",
+    "user": "alice",
+    "process": "explorer.exe",
+    "action": "extract",
+    "file": "update.zip"
+   },
+   "tag": "EXTRACT"
+  },
+  {
+   "id": "E4",
+   "timestamp": "10:31:11",
+   "event_type": "FILE_EVENT",
+   "user": "alice",
+   "process": "explorer.exe",
+   "parent": null,
+   "source": null,
+   "destination": null,
+   "file": "update.exe",
+   "action": "create",
+   "count": 1,
+   "raw_event": {
+    "timestamp": "10:31:11",
+    "event_type": "FILE_EVENT",
+    "user": "alice",
+    "process": "explorer.exe",
+    "action": "create",
+    "file": "update.exe"
+   },
+   "tag": "EXE_CREATE"
+  },
+  {
+   "id": "E5",
+   "timestamp": "10:31:13",
+   "event_type": "PROCESS_EVENT",
+   "user": "alice",
+   "process": "update.exe",
+   "parent": null,
+   "source": null,
+   "destination": null,
+   "file": "update.exe",
+   "action": "exec",
+   "count": 1,
+   "raw_event": {
+    "timestamp": "10:31:13",
+    "event_type": "PROCESS_EVENT",
+    "user": "alice",
+    "process": "update.exe",
+    "action": "exec",
+    "file": "update.exe"
+   },
+   "tag": "EXEC"
+  },
+  {
+   "id": "E6",
+   "timestamp": "10:31:15",
+   "event_type": "PROCESS_EVENT",
+   "user": "alice",
+   "process": "powershell.exe",
+   "parent": "update.exe",
+   "source": null,
+   "destination": null,
+   "file": null,
+   "action": "spawn",
+   "count": 1,
+   "raw_event": {
+    "timestamp": "10:31:15",
+    "event_type": "PROCESS_EVENT",
+    "user": "alice",
+    "process": "powershell.exe",
+    "action": "spawn",
+    "parent": "update.exe"
+   },
+   "tag": "POWERSHELL"
+  },
+  {
+   "id": "E7",
+   "timestamp": "10:31:20",
+   "event_type": "NETWORK_EVENT",
+   "user": "alice",
+   "process": "powershell.exe",
+   "parent": null,
+   "source": "10.0.0.23",
+   "destination": "185.XX.XX.10",
+   "file": null,
+   "action": "connect",
+   "count": 1,
+   "raw_event": {
+    "timestamp": "10:31:20",
+    "event_type": "NETWORK_EVENT",
+    "user": "alice",
+    "process": "powershell.exe",
+    "action": "connect",
+    "source": "10.0.0.23",
+    "destination": "185.XX.XX.10"
+   },
+   "tag": "EXT_CONN"
+  },
+  {
+   "id": "E8",
+   "timestamp": "10:31:25",
+   "event_type": "FILE_EVENT",
+   "user": "alice",
+   "process": "powershell.exe",
+   "parent": null,
+   "source": null,
+   "destination": null,
+   "file": null,
+   "action": "read",
+   "count": 42,
+   "raw_event": {
+    "timestamp": "10:31:25",
+    "event_type": "FILE_EVENT",
+    "user": "alice",
+    "process": "powershell.exe",
+    "action": "read",
+    "count": 42
+   },
+   "tag": "MASS_ACCESS"
+  },
+  {
+   "id": "E9",
+   "timestamp": "10:31:29",
+   "event_type": "FILE_EVENT",
+   "user": "alice",
+   "process": "powershell.exe",
+   "parent": null,
+   "source": null,
+   "destination": null,
+   "file": null,
+   "action": "write",
+   "count": 18,
+   "raw_event": {
+    "timestamp": "10:31:29",
+    "event_type": "FILE_EVENT",
+    "user": "alice",
+    "process": "powershell.exe",
+    "action": "write",
+    "count": 18
+   },
+   "tag": "MASS_MODIFY"
+  }
+ ],
+ "findings": [
+  {
+   "rule": "R1",
+   "name": "Download \u2192 Executable creation",
+   "why": "A downloaded archive was followed by a new executable on disk.",
+   "event_ids": [
+    "E2",
+    "E4"
+   ]
+  },
+  {
+   "rule": "R2",
+   "name": "Executable creation \u2192 Execution",
+   "why": "The newly created executable was run.",
+   "event_ids": [
+    "E4",
+    "E5"
+   ]
+  },
+  {
+   "rule": "R3",
+   "name": "Execution \u2192 PowerShell",
+   "why": "The executable spawned PowerShell, a common post-execution step.",
+   "event_ids": [
+    "E5",
+    "E6"
+   ]
+  },
+  {
+   "rule": "R4",
+   "name": "Process activity \u2192 External connection",
+   "why": "A suspicious process contacted an external address.",
+   "event_ids": [
+    "E5",
+    "E7"
+   ]
+  },
+  {
+   "rule": "R5",
+   "name": "Execution \u2192 Mass file access",
+   "why": "A suspicious process read an unusually large number of files.",
+   "event_ids": [
+    "E5",
+    "E8"
+   ]
+  },
+  {
+   "rule": "R6",
+   "name": "Mass access \u2192 Mass modification",
+   "why": "Large-scale file reads were followed by large-scale writes.",
+   "event_ids": [
+    "E8",
+    "E9"
+   ]
+  },
+  {
+   "rule": "R9",
+   "name": "Burst of suspicious events",
+   "why": "8 suspicious events occurred within 27s.",
+   "event_ids": [
+    "E2",
+    "E3",
+    "E4",
+    "E5",
+    "E6",
+    "E7",
+    "E8",
+    "E9"
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "id": "user",
+   "label": "User",
+   "sub": "alice",
+   "kind": "user",
+   "event_ids": [
+    "E2"
+   ],
+   "x": 0,
+   "y": 120
+  },
+  {
+   "id": "nE2",
+   "label": "Download",
+   "sub": "update.zip",
+   "kind": "proc",
+   "event_ids": [
+    "E2"
+   ],
+   "x": 230,
+   "y": 120
+  },
+  {
+   "id": "nE3",
+   "label": "Archive extracted",
+   "sub": "update.zip",
+   "kind": "proc",
+   "event_ids": [
+    "E3"
+   ],
+   "x": 460,
+   "y": 120
+  },
+  {
+   "id": "nE4",
+   "label": "Executable created",
+   "sub": "update.exe",
+   "kind": "proc",
+   "event_ids": [
+    "E4"
+   ],
+   "x": 690,
+   "y": 120
+  },
+  {
+   "id": "nE5",
+   "label": "Execution",
+   "sub": "update.exe",
+   "kind": "proc",
+   "event_ids": [
+    "E5"
+   ],
+   "x": 920,
+   "y": 120
+  },
+  {
+   "id": "nE6",
+   "label": "PowerShell spawned",
+   "sub": "powershell.exe",
+   "kind": "proc",
+   "event_ids": [
+    "E6"
+   ],
+   "x": 1150,
+   "y": 120
+  },
+  {
+   "id": "nE7",
+   "label": "External connection",
+   "sub": "185.XX.XX.10",
+   "kind": "ext",
+   "event_ids": [
+    "E7"
+   ],
+   "x": 1380,
+   "y": -20
+  },
+  {
+   "id": "nE8",
+   "label": "Mass file access",
+   "sub": "42 files",
+   "kind": "mass",
+   "event_ids": [
+    "E8"
+   ],
+   "x": 1610,
+   "y": 250
+  },
+  {
+   "id": "nE9",
+   "label": "Mass file modification",
+   "sub": "18 files",
+   "kind": "mass",
+   "event_ids": [
+    "E9"
+   ],
+   "x": 1840,
+   "y": 250
+  }
+ ],
+ "edges": [
+  {
+   "id": "e1",
+   "source": "user",
+   "target": "nE2"
+  },
+  {
+   "id": "e2",
+   "source": "nE2",
+   "target": "nE3"
+  },
+  {
+   "id": "e3",
+   "source": "nE3",
+   "target": "nE4"
+  },
+  {
+   "id": "e4",
+   "source": "nE4",
+   "target": "nE5"
+  },
+  {
+   "id": "e5",
+   "source": "nE5",
+   "target": "nE6"
+  },
+  {
+   "id": "e6",
+   "source": "nE6",
+   "target": "nE7"
+  },
+  {
+   "id": "e7",
+   "source": "nE6",
+   "target": "nE8"
+  },
+  {
+   "id": "e8",
+   "source": "nE8",
+   "target": "nE9"
+  }
+ ],
+ "note": "Prototype heuristic severity, not a validated risk score.",
+ "id": "eb2bd26d"
+}
